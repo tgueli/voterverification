@@ -70,6 +70,12 @@
       background-color: #a60a27;
       color: #ffffff;
     }
+    /* Active/selected state style before transition */
+    .option-btn.selected {
+      background-color: #a60a27 !important;
+      color: #ffffff !important;
+      border-color: #ffffff !important;
+    }
     .input-box {
       width: 100%;
       padding: 14px;
@@ -216,8 +222,10 @@
   ];
 
   let currentStep = 0;
+  let isTransitioning = false; // Flag to stop rapid double clicks
 
   function renderStep() {
+    isTransitioning = false;
     const quizContent = document.getElementById('quizContent');
     const progressBar = document.getElementById('progressBar');
 
@@ -241,7 +249,7 @@
 
     if (q.type === 'single') {
       q.options.forEach(opt => {
-        html += `<button class="option-btn" onclick="nextStep()">${opt}</button>`;
+        html += `<button class="option-btn" onclick="handleOptionClick(this)">${opt}</button>`;
       });
     } else if (q.type === 'input') {
       html += `
@@ -251,6 +259,24 @@
     }
 
     quizContent.innerHTML = html;
+  }
+
+  function handleOptionClick(btnElement) {
+    if (isTransitioning) return;
+    isTransitioning = true;
+
+    // Highlight the selected option visually
+    btnElement.classList.add('selected');
+
+    // Disable pointer events on all option buttons immediately
+    document.querySelectorAll('.option-btn').forEach(btn => {
+      btn.style.pointerEvents = 'none';
+    });
+
+    // 200ms delay gives time for the user to lift their finger/mouse before re-rendering
+    setTimeout(() => {
+      nextStep();
+    }, 200);
   }
 
   function nextStep() {
