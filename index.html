@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Voter Verification Questionnaire</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      padding: 16px;
+      background-color: #1a1a1a;
+      color: #ffffff;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+    .survey-card {
+      max-width: 500px;
+      margin: 0 auto;
+      background: #242424;
+      border: 2px solid #800020;
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+    }
+    .progress-bar-container {
+      width: 100%;
+      height: 8px;
+      background-color: #3d3d3d;
+      border-radius: 4px;
+      overflow: hidden;
+      margin-bottom: 16px;
+    }
+    .progress-bar {
+      height: 100%;
+      width: 0%;
+      background-color: #a60a27;
+      transition: width 0.3s ease;
+    }
+    .section-title {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: #a60a27;
+      margin-bottom: 8px;
+    }
+    .question-text {
+      font-size: 16px;
+      font-weight: 700;
+      margin-bottom: 20px;
+      line-height: 1.4;
+      color: #ffffff;
+    }
+    .option-btn {
+      display: block;
+      width: 100%;
+      padding: 14px 16px;
+      margin-bottom: 10px;
+      background-color: #1a1a1a;
+      border: 2px solid #a60a27;
+      border-radius: 8px;
+      color: #ffffff;
+      font-size: 14px;
+      font-weight: 600;
+      text-align: left;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .option-btn:hover {
+      background-color: #a60a27;
+      color: #ffffff;
+    }
+    .input-box {
+      width: 100%;
+      padding: 14px;
+      font-size: 15px;
+      border: 2px solid #a60a27;
+      border-radius: 8px;
+      background-color: #1a1a1a;
+      color: #ffffff;
+      margin-bottom: 12px;
+    }
+    .submit-btn {
+      width: 100%;
+      padding: 14px;
+      background-color: #a60a27;
+      border: none;
+      border-radius: 8px;
+      color: #ffffff;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      text-transform: uppercase;
+    }
+    .submit-btn:hover {
+      background-color: #c40c2e;
+    }
+    .completion-screen {
+      text-align: center;
+      padding: 20px 10px;
+    }
+    .completion-icon {
+      font-size: 40px;
+      margin-bottom: 12px;
+    }
+    .completion-title {
+      font-size: 20px;
+      font-weight: 800;
+      color: #ffffff;
+      margin-bottom: 8px;
+    }
+    .completion-sub {
+      font-size: 16px;
+      font-weight: 700;
+      color: #38ef7d;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="survey-card">
+  <div class="progress-bar-container" id="progressContainer">
+    <div class="progress-bar" id="progressBar"></div>
+  </div>
+
+  <div id="quizContent"></div>
+</div>
+
+<script>
+  const questions = [
+    {
+      section: "Section 1: Republican Voter Verification",
+      type: "single",
+      text: "We have you recorded as a registered Republican. Please confirm this is still the case.",
+      options: ["Yes, I am a registered Republican", "No, I am not"]
+    },
+    {
+      section: "Section 1: Republican Voter Verification",
+      type: "single",
+      text: "Please confirm your intent to vote for Republicans in the Midterm Elections.",
+      options: ["Yes, I plan to vote Republican", "Undecided"]
+    },
+    {
+      section: "Section 1: Republican Voter Verification",
+      type: "single",
+      text: "On a scale of 1-5, how enthusiastic are you to vote in the midterms?",
+      options: [
+        "1 – Very unenthusiastic",
+        "2 – Unenthusiastic",
+        "3 – Neither enthusiastic nor unenthusiastic",
+        "4 – Enthusiastic",
+        "5 – Very enthusiastic"
+      ]
+    },
+    {
+      section: "Section 1: Republican Voter Verification",
+      type: "input",
+      text: "Please confirm your current zip code by typing it into this box."
+    },
+    {
+      section: "Section 2: YOUR Priorities",
+      type: "single",
+      text: "Securing our borders:",
+      options: ["Extremely Important", "Somewhat Important", "Not at all Important"]
+    },
+    {
+      section: "Section 2: YOUR Priorities",
+      type: "single",
+      text: "Deporting criminal illegal aliens:",
+      options: ["Extremely Important", "Somewhat Important", "Not at all Important"]
+    },
+    {
+      section: "Section 2: YOUR Priorities",
+      type: "single",
+      text: "Passing the SAVE America Act to secure our elections are secure:",
+      options: ["Extremely Important", "Somewhat Important", "Not at all Important"]
+    },
+    {
+      section: "Section 2: YOUR Priorities",
+      type: "single",
+      text: "Reducing Biden's inflation and making life affordable:",
+      options: ["Extremely Important", "Somewhat Important", "Not at all Important"]
+    },
+    {
+      section: "Section 2: YOUR Priorities",
+      type: "single",
+      text: "Lowering the price of gas:",
+      options: ["Extremely Important", "Somewhat Important", "Not at all Important"]
+    },
+    {
+      section: "Section 2: YOUR Priorities",
+      type: "single",
+      text: "Protecting Social Security and Medicare:",
+      options: ["Extremely Important", "Somewhat Important", "Not at all Important"]
+    },
+    {
+      section: "Section 2: YOUR Priorities",
+      type: "single",
+      text: "Rooting out waste, fraud, and abuse to carry on the spirit of DOGE's mission:",
+      options: ["Extremely Important", "Somewhat Important", "Not at all Important"]
+    },
+    {
+      section: "Section 2: YOUR Priorities",
+      type: "single",
+      text: "Protecting America's farmers:",
+      options: ["Extremely Important", "Somewhat Important", "Not at all Important"]
+    },
+    {
+      section: "Section 2: YOUR Priorities",
+      type: "single",
+      text: "Making America Healthy Again:",
+      options: ["Extremely Important", "Somewhat Important", "Not at all Important"]
+    }
+  ];
+
+  let currentStep = 0;
+
+  function renderStep() {
+    const quizContent = document.getElementById('quizContent');
+    const progressBar = document.getElementById('progressBar');
+
+    if (currentStep >= questions.length) {
+      document.getElementById('progressContainer').style.display = 'none';
+      quizContent.innerHTML = `
+        <div class="completion-screen">
+          <div class="completion-icon">✅</div>
+          <div class="completion-title">Verification Complete!</div>
+          <p class="completion-sub">Submit your response by contributing below!</p>
+        </div>
+      `;
+      return;
+    }
+
+    const q = questions[currentStep];
+    progressBar.style.width = ((currentStep / questions.length) * 100) + '%';
+
+    let html = `<div class="section-title">${q.section}</div>`;
+    html += `<div class="question-text">${q.text}</div>`;
+
+    if (q.type === 'single') {
+      q.options.forEach(opt => {
+        html += `<button class="option-btn" onclick="nextStep()">${opt}</button>`;
+      });
+    } else if (q.type === 'input') {
+      html += `
+        <input type="text" id="zipInput" class="input-box" placeholder="Enter Zip Code..." maxlength="5">
+        <button class="submit-btn" onclick="nextStep()">Continue</button>
+      `;
+    }
+
+    quizContent.innerHTML = html;
+  }
+
+  function nextStep() {
+    currentStep++;
+    renderStep();
+  }
+
+  renderStep();
+</script>
+
+</body>
+</html>
